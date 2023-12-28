@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
+  final nameController = TextEditingController();
 
   void signUp() {
     if (confirmpasswordController.text != passwordController.text) {
@@ -38,9 +39,17 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -51,15 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   const SizedBox(height: 50),
 
-                  //logo
-                  Icon(
-                    Icons.message,
-                    size: 100,
-                    color: Colors.grey.shade800,
-                  ),
-                  const SizedBox(height: 50),
-
-                  //wecome back message
+                  //Information text
                   const Text(
                     "Let's create an account for you!",
                     style: TextStyle(fontSize: 16),
@@ -72,6 +73,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: emailController,
                     obsecureText: false,
                     hintText: "Email",
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  //name textfield
+                  MyTextField(
+                    controller: nameController,
+                    obsecureText: false,
+                    hintText: "Name",
                   ),
 
                   const SizedBox(height: 10),

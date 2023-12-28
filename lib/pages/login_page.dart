@@ -30,9 +30,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -47,13 +53,13 @@ class _LoginPageState extends State<LoginPage> {
                   Icon(
                     Icons.message,
                     size: 100,
-                    color: Colors.grey.shade800,
+                    color: Theme.of(context).primaryColor,
                   ),
                   const SizedBox(height: 50),
 
                   //wecome back message
                   const Text(
-                    "Welcome, Rido!",
+                    "Hey there, Welcome back!",
                     style: TextStyle(fontSize: 16),
                   ),
 

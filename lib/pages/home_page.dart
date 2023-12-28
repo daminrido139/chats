@@ -23,9 +23,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        toolbarHeight: 80,
+        title: const Text("Chats"),
         actions: [
-          IconButton(onPressed: signOut, icon: const Icon(Icons.logout)),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.search,
+              )),
+          IconButton(
+              onPressed: signOut,
+              icon: const Icon(
+                Icons.logout,
+              )),
         ],
       ),
       body: _buildUserList(),
@@ -53,7 +63,15 @@ class _HomePageState extends State<HomePage> {
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     if (_auth.currentUser!.email != data['email']) {
       return ListTile(
-        title: Text(data['email']),
+        leading: CircleAvatar(
+          radius: 25,
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
+        ),
+        title: Text(
+          data['email'],
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: const Text("test"),
         onTap: () {
           Future.delayed(const Duration(milliseconds: 300))
               .then((value) => Navigator.of(context).push(MaterialPageRoute(

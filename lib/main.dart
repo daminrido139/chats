@@ -19,9 +19,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            primary: Colors.blue,
+            secondary: Colors.blue[200],
+            tertiary: Colors.grey[200],
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+              hintStyle: TextStyle(
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w200,
+          ))),
       debugShowCheckedModeBanner: false,
-      home: AuthGate(),
+      home: const AuthGate(),
     );
   }
 }
