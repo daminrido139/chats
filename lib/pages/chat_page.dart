@@ -1,4 +1,5 @@
 import 'package:chats/components/chat_bubble.dart';
+import 'package:chats/components/profile_icon.dart';
 import 'package:chats/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUserId;
-  final String receiverEmail;
+  final String receiverName;
   const ChatPage({
     super.key,
     required this.receiverUserId,
-    required this.receiverEmail,
+    required this.receiverName,
   });
 
   @override
@@ -30,6 +31,12 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void initState() {
+    _chatService.seen(widget.receiverUserId);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _messageController.dispose();
     super.dispose();
@@ -40,10 +47,20 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
+        leadingWidth: 80,
         scrolledUnderElevation: 0.5,
         toolbarHeight: 80,
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Icon(Icons.arrow_back),
+                profileIcon(widget.receiverName, radius: 45)
+              ]),
+        ),
         title: Text(
-          widget.receiverEmail,
+          widget.receiverName,
         ),
       ),
       body: Column(children: [
@@ -62,7 +79,9 @@ class _ChatPageState extends State<ChatPage> {
             return Text("Error: ${snapshot.error}");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           return ListView(
             reverse: true,
@@ -123,13 +142,13 @@ class _ChatPageState extends State<ChatPage> {
           contentPadding: const EdgeInsets.all(12),
           isCollapsed: true,
           enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderSide: BorderSide(
+                width: 2, color: Theme.of(context).colorScheme.tertiary),
             borderRadius: BorderRadius.circular(30),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderSide: BorderSide(
+                width: 2, color: Theme.of(context).colorScheme.tertiary),
             borderRadius: BorderRadius.circular(30),
           ),
           hintText: "Message",

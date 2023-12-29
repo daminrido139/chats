@@ -21,11 +21,38 @@ class ChatService extends ChangeNotifier {
     ids.sort();
     final String chatRoomId = ids.join("_");
 
+    // updating in the chat room
     await _firestore
         .collection("chat_rooms")
         .doc(chatRoomId)
         .collection("messages")
         .add(newMessage.toMap());
+
+    // setting update in the currentuid
+    await _firestore
+        .collection('users')
+        .doc(currentUserId)
+        .collection('chat_info')
+        .doc(receiverId)
+        .set({
+      "uid": receiverId,
+      "timestamp": timestamp,
+      "last_message": message,
+      "seen": true,
+    }, SetOptions(merge: true));
+
+    // setting update in the recieveruid
+    await _firestore
+        .collection('users')
+        .doc(receiverId)
+        .collection('chat_info')
+        .doc(currentUserId)
+        .set({
+      "uid": currentUserId,
+      "timestamp": timestamp,
+      "last_message": message,
+      "seen": false,
+    }, SetOptions(merge: true));
   }
 
   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
@@ -39,5 +66,14 @@ class ChatService extends ChangeNotifier {
         .collection("messages")
         .orderBy("timestamp", descending: true)
         .snapshots();
+  }
+
+  void seen(String receiverId) async {
+    await _firestore
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('chat_info')
+        .doc(receiverId)
+        .set({"seen": true}, SetOptions(merge: true));
   }
 }
