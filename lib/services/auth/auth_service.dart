@@ -8,22 +8,18 @@ class AuthService extends ChangeNotifier {
 
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    try {
-      //sign in
-      UserCredential userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    //sign in
+    UserCredential userCredential =
+        await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
-        'email': email,
-      }, SetOptions(merge: true));
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
-    }
+    _firestore.collection('users').doc(userCredential.user!.uid).set({
+      'uid': userCredential.user!.uid,
+      'email': email,
+    }, SetOptions(merge: true));
+    return userCredential;
   }
 
   //sign out
@@ -34,22 +30,18 @@ class AuthService extends ChangeNotifier {
   //Create a new User
   Future<UserCredential> signUpWithEmailAndPassword(
       String email, String password, String name) async {
-    try {
-      UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+    UserCredential userCredential = await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
 
-      _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
-        'email': email,
-        'name': name,
-      });
-      _firestore
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .collection('chat_uids');
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
-    }
+    _firestore.collection('users').doc(userCredential.user!.uid).set({
+      'uid': userCredential.user!.uid,
+      'email': email,
+      'name': name,
+    });
+    _firestore
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .collection('chat_uids');
+    return userCredential;
   }
 }

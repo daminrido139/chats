@@ -1,6 +1,7 @@
 import 'package:chats/components/my_button.dart';
 import 'package:chats/components/my_text_field.dart';
 import 'package:chats/services/auth/auth_service.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,15 +18,17 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signIn() {
+  void signIn() async {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     try {
-      authService.signInWithEmailAndPassword(
+      await authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        e.toString(),
+      )));
     }
   }
 

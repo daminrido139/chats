@@ -1,6 +1,7 @@
 import 'package:chats/components/my_button.dart';
 import 'package:chats/components/my_text_field.dart';
 import 'package:chats/services/auth/auth_service.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,21 +21,27 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmpasswordController = TextEditingController();
   final nameController = TextEditingController();
 
-  void signUp() {
+  void signUp() async {
     if (confirmpasswordController.text != passwordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Passwords do not match!"),
       ));
+      confirmpasswordController.text = "";
+
       return;
     }
 
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
-      authService.signUpWithEmailAndPassword(
+      await authService.signUpWithEmailAndPassword(
           emailController.text, passwordController.text, nameController.text);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
+      emailController.text = "";
+      passwordController.text = "";
+      confirmpasswordController.text = "";
+      nameController.text = "";
     }
   }
 
